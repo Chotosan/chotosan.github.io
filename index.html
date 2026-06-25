@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>우드톤 3타일 퍼즐 - Cozy Wood Match-3</title>
+    <!-- Google Fonts for cozy modern rounded typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="desktop-wrapper">
+        <div id="game-container">
+            <!-- Decorative Nature Elements -->
+            <div class="decor decor-cloud-1"></div>
+            <div class="decor decor-cloud-2"></div>
+            <div class="decor decor-leaf-1"></div>
+            <div class="decor decor-leaf-2"></div>
+            <div class="decor decor-acorn-1"></div>
+            <div class="decor decor-acorn-2"></div>
+            <div class="decor decor-bird-1"></div>
+            <div class="decor decor-beetle-1"></div>
+
+            <!-- Game Header -->
+            <header id="game-header">
+                <div class="header-left">
+                    <div class="level-badge">LEVEL <span id="level-val">1</span></div>
+                </div>
+                <div class="header-center">
+                    <div class="score-container">
+                        <div class="score-label">SCORE</div>
+                        <div class="score-val" id="score-val">0</div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="high-score-container">
+                        <div class="hs-label">BEST</div>
+                        <div class="hs-val" id="highscore-val">0</div>
+                    </div>
+                    <div class="sound-controls">
+                        <button id="btn-shop" class="header-btn" title="상점 열기">
+                            <!-- SVG Shopping Cart Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                        </button>
+                        <button id="btn-music" class="header-btn" title="배경음 켜기/끄기">
+                            <!-- SVG Music Note Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                        </button>
+                        <button id="btn-sfx" class="header-btn" title="효과음 켜기/끄기">
+                            <!-- SVG Speaker Icon -->
+                            <svg viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM12 4L9.91 6.09 12 8.18V4zm-8 8h4l5 5V7L8 12H4v4z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Play Area (Board) -->
+            <main id="play-area">
+                <div id="board-container">
+                    <div id="tile-board">
+                        <!-- Tiles will be dynamically generated and layered here -->
+                    </div>
+                </div>
+            </main>
+
+            <!-- Bottom Interface -->
+            <footer id="game-footer">
+                <!-- Temporary Storage Shelf (Extract Item) -->
+                <section id="shelf-section" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
+                    <div class="shelf-label">보관함</div>
+                    <div id="temp-shelf" class="shelf-wood">
+                        <!-- Tiles extracted by the item will be placed here -->
+                    </div>
+                </section>
+
+                <!-- Tile Holder Bar (Wood Log Frame) -->
+                <div id="slot-bar-container">
+                    <div class="slot-bar-wood-frame">
+                        <div id="slot-bar" class="slots-container">
+                            <!-- Currently collected tiles go here (Max 7) -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Purple Gem Gauge Bar -->
+                <div id="gauge-container">
+                    <div class="gauge-label">
+                        <span class="purple-gem-icon">💎</span>
+                        보석 게이지
+                    </div>
+                    <div class="gauge-track">
+                        <div id="purple-gauge" class="gauge-fill" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <!-- Bottom Action Items Toolbar -->
+                <div id="toolbar">
+                    <button id="btn-extract" class="tool-btn" disabled>
+                        <div class="tool-icon-wrapper extract-icon">
+                            <!-- Arrow Out/Extract SVG -->
+                            <svg viewBox="0 0 24 24"><path d="M5 4h14v2H5zm7 4l-5 5h3v7h4v-7h3z"/></svg>
+                        </div>
+                        <span class="tool-label">템 꺼내기</span>
+                        <span class="tool-count" id="count-extract">1</span>
+                    </button>
+                    
+                    <button id="btn-undo" class="tool-btn" disabled>
+                        <div class="tool-icon-wrapper undo-icon">
+                            <!-- Undo/Rotate Arrow SVG -->
+                            <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+                        </div>
+                        <span class="tool-label">직전 취소</span>
+                        <span class="tool-count" id="count-undo">1</span>
+                    </button>
+
+                    <button id="btn-shuffle" class="tool-btn" disabled>
+                        <div class="tool-icon-wrapper shuffle-icon">
+                            <!-- Shuffle SVG -->
+                            <svg viewBox="0 0 24 24"><path d="M16 17.01V14l-4 4 4 4v-3.01c3.55 0 6.55-2.31 7.6-5.5l-2.37-.78C20.18 15.02 18.25 17.01 16 17.01zm-4-10c-3.55 0-6.55 2.31-7.6 5.5l2.37.78C7.82 10.98 9.75 9 12 9v3.01l4-4-4-4v3z"/></svg>
+                        </div>
+                        <span class="tool-label">타일 섞기</span>
+                        <span class="tool-count" id="count-shuffle">1</span>
+                    </button>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modals & Overlays -->
+    
+    <!-- Start Game / Main Screen Modal -->
+    <div id="start-modal" class="modal-overlay">
+        <div class="modal-content wood-panel">
+            <h1 class="game-title">우드톤 3타일 퍼즐</h1>
+            <div class="game-description">
+                <p>아늑한 숲 속의 힐링 퍼즐 게임!</p>
+                <div class="instruction-box">
+                    <h3>🎮 게임 규칙</h3>
+                    <ul>
+                        <li>동일한 그림의 타일을 <strong>3개</strong> 모으면 제거됩니다.</li>
+                        <li>타일은 겹쳐 있으며, <strong>맨 위에 있는 밝은 타일</strong>만 선택 가능합니다.</li>
+                        <li>하단 보관 슬롯이 <strong>7개</strong> 가득 차면 게임 오버!</li>
+                        <li>💎 보석 타일을 제거하면 게이지가 충전되어 <strong>무작위 아이템</strong>이 보너스로 생성됩니다!</li>
+                    </ul>
+                </div>
+            </div>
+            <button id="btn-start" class="modal-action-btn pulse">게임 시작</button>
+        </div>
+    </div>
+
+    <!-- Victory / Level Clear Modal -->
+    <div id="victory-modal" class="modal-overlay hidden">
+        <div class="modal-content wood-panel">
+            <h2 class="modal-title victory-title">🌳 스테이지 클리어!</h2>
+            <div class="modal-info">
+                <p>숲이 더욱 맑고 깨끗해졌습니다.</p>
+                <div class="score-summary">
+                    <div>현재 점수: <span id="victory-score">0</span></div>
+                    <div>진행 스테이지: <span id="victory-level">1</span></div>
+                </div>
+            </div>
+            <button id="btn-next-level" class="modal-action-btn">다음 스테이지</button>
+        </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="modal-overlay hidden">
+        <div class="modal-content wood-panel">
+            <h2 class="modal-title gameover-title">🍂 게임 오버</h2>
+            <div class="modal-info">
+                <p>슬롯이 가득 찼습니다. 다시 도전해 보세요!</p>
+                <div class="score-summary">
+                    <div>최종 점수: <span id="gameover-score">0</span></div>
+                    <div>도달 스테이지: <span id="gameover-level">1</span></div>
+                </div>
+            </div>
+            <div class="modal-actions" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
+                <button id="btn-revive-ad" class="modal-action-btn revive-ad-btn pulse">광고 보고 계속하기 📺</button>
+                <button id="btn-restart" class="modal-action-btn btn-secondary">다시 시작</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div id="shop-modal" class="modal-overlay hidden">
+        <div class="modal-content wood-panel">
+            <h2 class="modal-title shop-title">🛒 숲속 상점</h2>
+            <p class="modal-info">광고를 시청하고 아이템을 충전해 보세요!</p>
+            <div class="shop-grid">
+                <div class="shop-item">
+                    <div class="tool-icon-wrapper extract-icon">
+                        <svg viewBox="0 0 24 24"><path d="M5 4h14v2H5zm7 4l-5 5h3v7h4v-7h3z"/></svg>
+                    </div>
+                    <div class="shop-item-info">
+                        <h4>템 꺼내기</h4>
+                        <p>보관함으로 3개 이동</p>
+                    </div>
+                    <button id="btn-shop-extract" class="shop-ad-btn">광고 시청 📺</button>
+                </div>
+                <div class="shop-item">
+                    <div class="tool-icon-wrapper undo-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05 1-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+                    </div>
+                    <div class="shop-item-info">
+                        <h4>직전 취소</h4>
+                        <p>마지막 타일 되돌리기</p>
+                    </div>
+                    <button id="btn-shop-undo" class="shop-ad-btn">광고 시청 📺</button>
+                </div>
+                <div class="shop-item">
+                    <div class="tool-icon-wrapper shuffle-icon">
+                        <svg viewBox="0 0 24 24"><path d="M16 17.01V14l-4 4 4 4v-3.01c3.55 0 6.55-2.31 7.6-5.5l-2.37-.78C20.18 15.02 18.25 17.01 16 17.01zm-4-10c-3.55 0-6.55 2.31-7.6 5.5l2.37.78C7.82 10.98 9.75 9 12 9v3.01l4-4-4-4v3z"/></svg>
+                    </div>
+                    <div class="shop-item-info">
+                        <h4>타일 섞기</h4>
+                        <p>남은 타일 섞기</p>
+                    </div>
+                    <button id="btn-shop-shuffle" class="shop-ad-btn">광고 시청 📺</button>
+                </div>
+            </div>
+            <button id="btn-close-shop" class="modal-action-btn btn-secondary">상점 닫기</button>
+        </div>
+    </div>
+
+    <!-- Simulated Ad Overlay -->
+    <div id="ad-modal" class="modal-overlay hidden">
+        <div class="ad-container wood-panel">
+            <div class="ad-header">
+                <span>📺 광고 시청 중...</span>
+                <span id="ad-timer">3s</span>
+            </div>
+            <div class="ad-video-mock">
+                <div class="ad-logo">🌳</div>
+                <div class="ad-text">아늑한 숲 속의 3타일 퍼즐</div>
+                <div class="spinner"></div>
+            </div>
+            <div class="ad-progress-bar">
+                <div id="ad-progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Game Logic -->
+    <script src="game.js"></script>
+</body>
+</html>
