@@ -253,6 +253,13 @@ function resizeBoard() {
     const containerW = boardContainer.clientWidth;
     const containerH = boardContainer.clientHeight;
     
+    // Fallback if layout is not ready yet
+    if (containerW === 0 || containerH === 0) {
+        boardScale = 1;
+        tileBoard.style.transform = `translate(-50%, -50%) scale(${boardScale})`;
+        return;
+    }
+    
     const designW = 360;
     const designH = 440;
     
@@ -263,16 +270,8 @@ function resizeBoard() {
     // Scale down to fit viewport, cap upscale at 1.1x
     boardScale = Math.min(scaleX, scaleY, 1.1);
     
-    // Apply scale transform
-    tileBoard.style.transform = `scale(${boardScale})`;
-    
-    // Centering board horizontally
-    const leftOffset = (containerW - designW * boardScale) / 2;
-    tileBoard.style.left = `${leftOffset}px`;
-    
-    // Centering board vertically
-    const topOffset = Math.max(0, (containerH - designH * boardScale) / 2);
-    tileBoard.style.top = `${topOffset}px`;
+    // Apply transform centering via translate(-50%, -50%) and scale
+    tileBoard.style.transform = `translate(-50%, -50%) scale(${boardScale})`;
 }
 
 // --- Coordinate Symmetrical Layout Generator ---
@@ -1248,6 +1247,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // Initialize scaling hooks
     resizeBoard();
     window.addEventListener('resize', resizeBoard);
+    window.addEventListener('load', resizeBoard);
     
     // Sync UI mute buttons to local storage values
     if (audio.musicMuted) document.getElementById('btn-music').classList.add('muted');

@@ -322,9 +322,10 @@ body {
     position: absolute;
     width: 360px;
     height: 440px;
-    top: 0;
     left: 50%;
-    transform-origin: top center;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transform-origin: center center;
 }
 
 /* --- Layered 3D Wood Tiles --- */
