@@ -23,6 +23,8 @@ let state = {
     audioInitialized: false
 };
 
+let boardScale = 1; // track the scale globally for dynamic sizing
+
 // Web Audio API Synthesizer
 class AudioController {
     constructor() {
@@ -242,6 +244,37 @@ function checkOverlaps() {
     }
 }
 
+// --- Responsive Board Scaling ---
+function resizeBoard() {
+    const boardContainer = document.getElementById('board-container');
+    const tileBoard = document.getElementById('tile-board');
+    if (!boardContainer || !tileBoard) return;
+    
+    const containerW = boardContainer.clientWidth;
+    const containerH = boardContainer.clientHeight;
+    
+    const designW = 360;
+    const designH = 440;
+    
+    // Scale factor to fit the viewport dimensions
+    const scaleX = containerW / designW;
+    const scaleY = containerH / designH;
+    
+    // Scale down to fit viewport, cap upscale at 1.1x
+    boardScale = Math.min(scaleX, scaleY, 1.1);
+    
+    // Apply scale transform
+    tileBoard.style.transform = `scale(${boardScale})`;
+    
+    // Centering board horizontally
+    const leftOffset = (containerW - designW * boardScale) / 2;
+    tileBoard.style.left = `${leftOffset}px`;
+    
+    // Centering board vertically
+    const topOffset = Math.max(0, (containerH - designH * boardScale) / 2);
+    tileBoard.style.top = `${topOffset}px`;
+}
+
 // --- Coordinate Symmetrical Layout Generator ---
 function generateLevelLayout(level) {
     const coords = [];
@@ -406,6 +439,9 @@ function initLevel(levelNum) {
     // Update toolbar counts
     updateToolbar();
     
+    // Resize board to fit the container
+    resizeBoard();
+    
     state.gameActive = true;
 }
 
@@ -558,6 +594,8 @@ function handleTileTap(tile) {
     tileEl.classList.add('tile-flying');
     tileEl.style.left = `${rect.left}px`;
     tileEl.style.top = `${rect.top}px`;
+    tileEl.style.transform = `scale(${boardScale})`;
+    tileEl.style.transformOrigin = 'center center';
     document.body.appendChild(tileEl); // move to body during animation
 
     // Find destination index in slot (insertion sort by type)
@@ -595,10 +633,11 @@ function handleTileTap(tile) {
         const targetRect = targetSlotEl.getBoundingClientRect();
         
         // Set styles to fly to destination
+        const targetScale = targetRect.width / 58;
         setTimeout(() => {
             tileEl.style.left = `${targetRect.left}px`;
             tileEl.style.top = `${targetRect.top}px`;
-            tileEl.style.transform = 'scale(0.8)';
+            tileEl.style.transform = `scale(${targetScale})`;
         }, 10);
 
         // On fly complete
@@ -1127,6 +1166,9 @@ function reviveGame() {
     checkOverlaps();
     updateToolbar();
     
+    // Scale board to fit new dimensions
+    resizeBoard();
+    
     audio.playGaugeFull(); // pleasant chime on resume
 }
 
@@ -1202,6 +1244,10 @@ function loadHighScore() {
 window.addEventListener('DOMContentLoaded', () => {
     loadHighScore();
     setupEventListeners();
+    
+    // Initialize scaling hooks
+    resizeBoard();
+    window.addEventListener('resize', resizeBoard);
     
     // Sync UI mute buttons to local storage values
     if (audio.musicMuted) document.getElementById('btn-music').classList.add('muted');

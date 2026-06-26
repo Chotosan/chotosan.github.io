@@ -320,10 +320,11 @@ body {
 
 #tile-board {
     position: absolute;
-    width: 100%;
-    height: 100%;
+    width: 360px;
+    height: 440px;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform-origin: top center;
 }
 
 /* --- Layered 3D Wood Tiles --- */
@@ -1033,4 +1034,92 @@ body {
     width: 0%;
     transition: width 0.1s linear;
     box-shadow: 0 0 8px rgba(138, 201, 38, 0.8);
+}
+
+/* --- Mobile Responsive Sizing for Small Heights --- */
+@media (max-height: 760px) {
+    #game-header {
+        height: 60px !important;
+        padding: 5px 12px !important;
+    }
+    .level-badge {
+        padding: 5px 10px !important;
+        font-size: 13px !important;
+    }
+    .score-container {
+        padding: 2px 12px !important;
+    }
+    .score-val {
+        font-size: 16px !important;
+    }
+    .hs-val {
+        font-size: 12px !important;
+    }
+    .header-btn {
+        width: 28px !important;
+        height: 28px !important;
+    }
+    .header-btn svg {
+        width: 14px !important;
+        height: 14px !important;
+    }
+    
+    /* Shelf Section */
+    .shelf-wood {
+        height: 54px !important;
+        padding: 2px 8px !important;
+    }
+    .shelf-wood .tile-placeholder,
+    .shelf-wood .tile,
+    .shelf-slot-wrapper {
+        width: 38px !important;
+        height: 38px !important;
+    }
+    .shelf-label {
+        font-size: 10px !important;
+        margin-bottom: 1px !important;
+    }
+    
+    /* Slots container */
+    .slot-bar-wood-frame {
+        height: 68px !important;
+        padding: 4px 8px !important;
+    }
+    .slots-container {
+        height: 42px !important;
+    }
+    .slots-container .tile {
+        width: 36px !important;
+        height: 36px !important;
+    }
+    
+    /* Gauge Container */
+    .gauge-track {
+        height: 10px !important;
+    }
+    .gauge-label {
+        font-size: 10px !important;
+    }
+    
+    /* Toolbar */
+    .tool-icon-wrapper {
+        width: 38px !important;
+        height: 38px !important;
+        border-radius: 10px !important;
+    }
+    .tool-icon-wrapper svg {
+        width: 18px !important;
+        height: 18px !important;
+    }
+    .tool-label {
+        font-size: 9px !important;
+        margin-top: 4px !important;
+    }
+    .tool-count {
+        width: 16px !important;
+        height: 16px !important;
+        font-size: 9px !important;
+        top: -4px !important;
+        right: 8px !important;
+    }
 }
